@@ -1,0 +1,114 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Bachauling Capabilities Demo</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+{% load staticfiles %}
+
+<script src='{% static "javascript/lib/jquery-3.2.1.min.js" %}'></script>
+<link rel="stylesheet" href='{% static "javascript/bootstrap-3.3.7-dist/css/bootstrap.css" %}'>
+<script src='{% static "javascript/bootstrap-3.3.7-dist/js/bootstrap.min.js" %}'></script>
+
+<link href='{% static "css/signin.css" %}' rel="stylesheet">
+
+
+      <style>
+    /* Set height of the grid so .sidenav can be 100% (adjust if needed) */
+    .row.content {height: 90vh}
+
+    /* Set gray background color and 100% height */
+    .sidenav {
+      background-color: #f1f1f1;
+      height: 100%;
+    }
+
+    /* Set black background color, white text and some padding */
+    footer {
+      background-color: #555;
+      color: white;
+      padding: 15px;
+    }
+
+    /* On small screens, set height to 'auto' for sidenav and grid */
+    @media screen and (max-width: 767px) {
+      .sidenav {
+        height: auto;
+        padding: 15px;
+      }
+      .row.content {height: auto;}
+    }
+  </style>
+
+</head>
+
+
+<body>
+
+<div class="container-fluid">
+  <div class="row content">
+<!--    <div class="col-sm-2 sidenav" style="background-color:#f9f8d9">
+      <h4>Home Menu</h4>
+      <ul class="nav nav-pills nav-stacked">
+        <li class="active"><a href="#section1">Home</a></li>
+        <li><a href="#section2">The Research Concept</a></li>
+        <li><a href="#section3">Intended Final Users</a></li>
+        <li><a href="#section3">About Us</a></li>
+      </ul><br>
+&lt;!&ndash;      <div class="input-group">
+        <input type="text" class="form-control" placeholder="Search...">
+        <span class="input-group-btn">
+          <button class="btn btn-default" type="button">
+            <span class="glyphicon glyphicon-search"></span>
+          </button>
+        </span>
+      </div>&ndash;&gt;
+    </div>-->
+
+    <div class="col-sm-12">
+        <div class="jumbotron" style="background-color:#252e3d">
+            <center><h1><font color="#ffffff">A Smart Backhaul Trucking System</font></h1></center>
+        </div>
+        <div class="row-sm-3">
+            <center> <h2> Carrier Login</h2> </center>
+            <form class="form-signin" action="{% url 'optlogin' %}" method="POST">
+            {% csrf_token %}
+            <label for="inputEmail" class="sr-only">Email address</label>
+            <input name="Email" type="email" id="inputEmail" class="form-control" placeholder="Email address" autofocus>
+            <label for="inputPassword" class="sr-only">Password</label>
+            <input name="Password" type="password" id="inputPassword" class="form-control" placeholder="Password">
+                <input name="LoginType" type="hidden" id="CaHidden" value="Carrier">
+                <br>
+                <button class="btn btn-lg btn-primary btn-block" type="submit" value=inputEmail>Sign in</button>
+                <button class="btn btn-lg btn-primary btn-block" type="submit" formaction="{% url 'optregister' %}"  value=Register>Register</button>
+          </form>
+    </div>
+        </div>
+
+                    <div class="row">
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <center>
+                <img src="{% static 'images/logo_zz.png' %}" height="150">
+                <img src="{% static 'images/logo thai log fed.png' %}" height="150">
+                <img src="{% static 'images/logo_NRCT.jpg' %}" height="150">
+                <img src="{% static 'images/TRF logo.png' %}" height="150">
+                <img src="{% static 'images/logo_xx.png' %}" height="150">
+            </center>
+        </div>
+  </div>
+</div>
+
+<footer class="container-fluid" style="background-color:#252e3d">
+  <p>Created by Janya Chanchaichujit's Research Group - 2017</p>
+</footer>
+
+</body>
+</html>

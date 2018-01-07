@@ -1,0 +1,107 @@
+{% extends 'OptDemo/Dashboard_Admin.html' %}
+
+{% block content %}
+
+{% load staticfiles %}
+
+<!-- !PAGE CONTENT! -->
+<div class="w3-main" style="margin-left:300px;margin-top:43px;">
+
+  <header class="w3-container" style="padding-top:22px">
+    <div class="w3-half">
+    <h5><b>Fleet Overview</b></h5>
+    </div>
+    <div class="w3-half">
+    <h5><b>Filtering Options</b></h5>
+    </div>
+  </header>
+
+  <div class="w3-panel" id="modcontent">
+
+    <div class="w3-row-padding" style="margin:0 -16px">
+      <div class="w3-half" id="divider">
+        <center> <div id="map1" style="width:740px;height:370px;background:white"></div> </center>
+
+        <script>
+        var sWidth = $("#divider").width();
+        var sHeight = (window.innerHeight-$("#Superior").height())*0.80;
+        $("#map1").css("width", sWidth);
+        $("#map1").css("height", sHeight);
+        var mapopt;
+
+        function myMap() {
+
+          var mapOptions = {
+              center: new google.maps.LatLng(13.7, 100.5),
+              zoom: 6,
+              mapTypeId: google.maps.MapTypeId.MAP
+            };
+          mapopt = new google.maps.Map(document.getElementById("map1"), mapOptions);
+        }
+        </script>
+
+
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDxVzTLMo2bD0gjgPhBPSLXMjpEg8tb3zo&callback=myMap"></script>
+
+
+      </div>
+        <div class="w3-half" id="derecha">
+            <form method="get">
+                {{ filter.form.as_p }}
+                <button type="submit">Search</button>
+            </form>
+            <ul>
+               {% for truck in filter.qs %}
+                   <li>{{ truck.TruckName }} - Longitude: {{ truck.CurrentLon }} , Latitude: {{ truck.CurrentLat }}</li>
+                        <script>
+                        ptLat = parseFloat("{{ truck.CurrentLat }}");
+                        ptLng = parseFloat("{{ truck.CurrentLon }}");
+                        var point = new google.maps.LatLng(ptLat, ptLng);
+                        var marker = new google.maps.Marker({
+                            position: point,
+                            map: mapopt,
+                            label: {
+                                text: "{{ truck.TruckName }}",
+                                color: "#000",
+                                fontSize: "18px",
+                                fontWeight: "bold"
+                            },
+                            labelOrigin: new google.maps.Point(9, 9),
+                            icon: {
+                                url: 'http://maps.google.com/mapfiles/ms/icons/red.png',
+                                origin: {x: 0, y: 0},
+                                labelOrigin: new google.maps.Point(20,40)
+                            },
+                            title: 'Latitude:' + ptLat + ', Longitude:' + ptLng + ' owned by ' + "{{ truck.OwnerName }}"
+                            });
+                        ptLat = parseFloat("{{ truck.DestLat }}");
+                        ptLng = parseFloat("{{ truck.DestLon }}");
+                        // console.log(ptLat);
+                        // console.log(ptLng);
+                        var point = new google.maps.LatLng(ptLat, ptLng);
+                        var marker = new google.maps.Marker({
+                            position: point,
+                            map: mapopt,
+                            label: {
+                                text: "{{ truck.TruckName }}",
+                                color: "#000",
+                                fontSize: "18px",
+                                fontWeight: "bold"
+                            },
+                            labelOrigin: new google.maps.Point(9, 9),
+                            icon: {
+                                url: 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png',
+                                origin: {x: 0, y: 0},
+                                labelOrigin: new google.maps.Point(20,40)
+                            },
+                            title: 'Latitude:' + ptLat + ', Longitude:' + ptLng + ' owned by ' + "{{ truck.OwnerName }}"
+                            });
+                        </script>
+               {% endfor %}
+            </ul>
+        </div>
+    </div>
+
+        </div>
+
+{% endblock %}

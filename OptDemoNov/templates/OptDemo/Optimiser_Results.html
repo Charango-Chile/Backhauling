@@ -1,0 +1,90 @@
+<!-- <script>document.getElementById('DashTitle').innerHTML = 'Example of an Optimiser';</script> -->
+{% extends 'BHDemo/Dashboard.html' %}
+
+{% block content %}
+
+{% load staticfiles %}
+
+<style>
+ #progress-bar {
+  width: 300px;
+  margin: 50px;
+}
+.progress {
+  height: 25px;
+  width: 300px;
+}
+.progress-info {
+    color: #000;
+    text-align: center;
+    font-weight: bold;
+}
+</style>
+
+<h3>The results after running the optimiser</h3>
+
+<!--<center>
+<div id="progress-bar">
+    <progress class="progress progress-striped progress-success" value="1" max="100">
+        <div class="progress">
+            <span class="progress-bar" style="width: 1%;">1%</span>
+        </div>
+    </progress>
+    <div class="progress-info">init</div>
+</div>
+</center>-->
+
+<center>
+<img id="imgres" scr='' alt="test">
+</center>
+
+<script>
+//var progressBarContainer = $('#progress-bar');
+//var progressBar = {
+//    chain: [],
+//    progress: progressBarContainer.children('progress'),
+//    progressBar: progressBarContainer.find('.progress-bar'),
+//    progressInfo: progressBarContainer.children('.progress-info'),
+//    set: function(value, info, noPush) {
+//        if(!noPush) {
+//            this.chain.push(value);
+//        }
+//        if(this.chain[0] == value) {
+//            this.go(value, info);
+//        }
+//        else {
+//            var self = this;
+//            setTimeout(function() {
+//                self.set(value, info, true)
+//            }, 100);
+//        }
+//    },
+//    go: function(value, info) {
+//        this.progressInfo.text(info);
+//        var self = this;
+//        var interval = setInterval(function() {
+//            var curr = self.progress.attr('value');
+//            if(curr >= value) {
+//                clearInterval(interval);
+//                self.progress.attr('value', value);
+//                self.progressBar.css('width', value + '%');
+//                self.chain.shift()
+//            }
+//            else {
+//               self.progress.attr('value', ++curr);
+//                self.progressBar.css('width', curr + '%');
+//            }
+//        }, 10)
+//    }
+//};
+
+//var PBarText = ''
+//for (i = 0; i <= 100; i++) {
+//    progressBar.set(i, 'Working on it, currently at ' + i + ' %');
+//}
+
+document.getElementById('imgres').src='{% static "images/test.png" %}';
+</script>
+
+
+{% endblock %}

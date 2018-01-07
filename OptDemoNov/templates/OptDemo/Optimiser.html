@@ -1,0 +1,45 @@
+<!-- <script>document.getElementById('DashTitle').innerHTML = 'Example of an Optimiser';</script> -->
+{% extends 'BHDemo/Dashboard.html' %}
+
+{% block content %}
+{% load staticfiles %}
+
+<h1>Example of an Optimisation Process</h1> <br>
+
+    <p> The example proceeds by calling a Python script (on the background) that will run a Genetic Algorithm to solve a vehicle routing problem. </p>
+
+    <p>The vehicle routing problem in particular is one with capacity constraints on the trucks and the cities to visit are randomly generated. The distances are calculated using the Euclidean norm. </p>
+
+    <p>Please press the button, wait not so long and you will be presented with an image of the routing optimised by the algorithm. If you want to run it again, please come back to this page and press the button to see how a new problem instance is solved with the help of a Genetic Algorithm.</p>
+<br>
+<br>
+
+<script type="text/javascript">
+        function loading(){
+            $("#loading").show();
+            $("body").css("cursor", "progress");
+        }
+</script>
+
+<style>
+div#loading {
+    width: 800px;
+    height: 50px;
+    display: none;
+    }
+</style>
+
+<center><div id="loading"> <h3>The request is being processed! Please be patient... </h3></div></center>
+
+<center>
+<form action="{% url 'optres' user_name=Name %}" method="post">
+    {% csrf_token %}
+    <!-- <input type="submit" value="Run Optimisation Example"> -->
+    <button class="btn btn-lg btn-primary btn-block" type="submit" value="runoptex" onclick="loading()">Run Optimisation Example</button>
+</form>
+</center>
+
+
+
+
+{% endblock %}

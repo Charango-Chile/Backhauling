@@ -1,0 +1,120 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Bachauling Optimisation Demo</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+{% load staticfiles %}
+
+<script src='{% static "javascript/lib/jquery-3.2.1.min.js" %}'></script>
+<link rel="stylesheet" href='{% static "javascript/bootstrap-3.3.7-dist/css/bootstrap.css" %}'>
+<script src='{% static "javascript/bootstrap-3.3.7-dist/js/bootstrap.min.js" %}'></script>
+
+<link href='{% static "css/signin.css" %}' rel="stylesheet">
+
+
+      <style>
+    /* Set height of the grid so .sidenav can be 100% (adjust if needed) */
+    .row.content {height: 90vh}
+
+    /* Set gray background color and 100% height */
+    .sidenav {
+      background-color: #f1f1f1;
+      height: 100%;
+    }
+
+    /* Set black background color, white text and some padding */
+    footer {
+      background-color: #555;
+      color: white;
+      padding: 15px;
+    }
+
+    /* On small screens, set height to 'auto' for sidenav and grid */
+    @media screen and (max-width: 767px) {
+      .sidenav {
+        height: auto;
+        padding: 15px;
+      }
+      .row.content {height: auto;}
+    }
+  </style>
+
+</head>
+
+
+<body>
+
+<div class="container-fluid">
+  <div class="row content">
+
+        <div class="jumbotron" style="background-color:#12479b">
+            <center><h1><font color="#ffffff">A Smart Backhaul Trucking System</font></h1></center>
+        </div>
+        <div class="row">
+            <center> <h2> Please select your login type: </h2> </center>
+            <div class="col-md-2"> </div>
+            <div class="col-md-8" style="background-image: url('{% static 'images/Backdrop2.jpg' %}')" >
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <center>
+                    <a href = "{% url 'adminlogin'%}" class="btn btn-primary btn-lg">Admin</a>
+                    <a href = "{% url 'carrierlogin'%}" class="btn btn-primary btn-lg">Carrier</a>
+                    <a href = "{% url 'shipperlogin'%}" class="btn btn-primary btn-lg">Shipper</a>
+                </center>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+                <br>
+            </div>
+            <div class="col-md-2"> </div>
+            <!--
+            <form class="form-signin" action="{% url 'login' %}" method="POST">
+            {% csrf_token %}
+            <label for="inputEmail" class="sr-only">Email address</label>
+            <input name="Email" type="email" id="inputEmail" class="form-control" placeholder="Email address" autofocus>
+            <label for="inputPassword" class="sr-only">Password</label>
+            <input name="Password" type="password" id="inputPassword" class="form-control" placeholder="Password">
+                <br>
+                <button class="btn btn-lg btn-primary btn-block" type="submit" value=inputEmail>Sign in</button>
+                <button class="btn btn-lg btn-primary btn-block" type="submit" formaction="{% url 'register' %}"  value=Register>Register</button>
+          </form>
+          -->
+
+
+       </div>
+        <div class="row">
+            <br>
+            <br>
+            <br>
+            <br>
+            <center>
+                <img src="{% static 'images/logo_zz.png' %}" height="150">
+                <img src="{% static 'images/logo thai log fed.png' %}" height="150">
+                <img src="{% static 'images/logo_NRCT.jpg' %}" height="150">
+                <img src="{% static 'images/TRF logo.png' %}" height="150">
+                <img src="{% static 'images/logo_xx.png' %}" height="150">
+            </center>
+        </div>
+  </div>
+</div>
+
+
+<footer class="container-fluid" style="background-color:#252e3d">
+  <p style="text-align:right">Created by Janya Chanchaichujit's Research Group - 2017</p>
+</footer>
+
+</body>
+</html>

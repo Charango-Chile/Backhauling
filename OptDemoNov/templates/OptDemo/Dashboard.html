@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+<title>Backhauling App</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+{% load staticfiles %}
+
+<script src='{% static "javascript/lib/jquery-3.2.1.min.js" %}'></script>
+<link rel="stylesheet" href='{% static "javascript/bootstrap-3.3.7-dist/css/bootstrap.css" %}'>
+<script src='{% static "javascript/bootstrap-3.3.7-dist/js/bootstrap.min.js" %}'></script>
+
+<link href='{% static "css/w3.css" %}' rel="stylesheet">
+
+<script src='{% static "javascript/d3/d3.js" %}'></script>
+<script src='{% static "javascript/three.min.js" %}'></script>
+
+<link rel="stylesheet" href='{% static "css/font-awesome-4.7.0/css/font-awesome.min.css" %}'>
+
+<style>
+html,body,h1,h2,h3,h4,h5 {font-family: "Verdana", sans-serif}
+</style>
+<body class="w3-light-grey">
+
+<script type="text/javascript">
+// document.getElementById('DashTitle').innerHTML = 'Dashboard - Main';
+var id = null;
+</script>
+
+<!-- Top container -->
+<div class="w3-bar w3-top w3-black w3-large" style="z-index:4">
+  <button class="w3-bar-item w3-button w3-hide-large w3-hover-none w3-hover-text-light-grey" onclick="w3_open();"><i class="fa fa-bars"></i>  Menu</button>
+  <span class="w3-bar-item w3-right"><a href="{% url 'index' %}" class="w3-bar-item w3-button w3-padding" data-toggle="tooltip" title="Click here to exit the App"><i class="fa fa-sign-out w3-text-white fa-fw"></i>  Exit</a></span>
+</div>
+
+<!-- Sidebar/menu -->
+<nav class="w3-sidebar w3-collapse w3-white w3-animate-left" style="z-index:3;width:300px;" id="mySidebar"><br>
+  <div class="w3-container w3-row">
+    <div class="w3-col s4">
+      <img src='{% static "images/businessman.png" %}' class="w3-circle w3-margin-right" style="width:46px">
+    </div>
+    <div class="w3-col s8 w3-bar">
+      <span>Welcome, <strong>{{ Name }}</strong></span><br>
+      <a href="#" class="w3-bar-item w3-button"><i class="fa fa-envelope"></i></a>
+      <a href="#" class="w3-bar-item w3-button"><i class="fa fa-user"></i></a>
+      <a href="#" class="w3-bar-item w3-button"><i class="fa fa-cog"></i></a>
+    </div>
+  </div>
+  <hr>
+  <div class="w3-container">
+    <h5><b>Dashboard</b></h5>
+  </div>
+  <div class="w3-bar-block">
+    <a href="#" class="w3-bar-item w3-button w3-padding-16 w3-hide-large w3-dark-grey w3-hover-black" onclick="w3_close()" title="close menu"><i class="fa fa-remove fa-fw"></i>  Close Menu</a>
+    <a href="{% url 'entry' user_name=Name %}" class="w3-bar-item w3-button w3-padding" data-toggle="tooltip" title="This option provides you with an overview of the operation. Main KPIs as needed can be added to this view to provide a snapshot easy to understand."><i class="fa fa-eye fa-fw"></i>  Overview</a>
+    <a href="{% url 'kpis' user_name=Name %}" class="w3-bar-item w3-button w3-padding" data-toggle="tooltip" title="Just a small sample of different types of simple graphs. A section like this one can be grown to be a fully informative Dashboard"><i class="fa fa-line-chart fa-fw"></i>  Graph Examples </a>
+    <a href="{% url 'maps' user_name=Name %}" class="w3-bar-item w3-button w3-padding" data-toggle="tooltip" title="An enlarged version of a typical Google Map. Some markers (placed at random) show potential use of the technology to provide particular information about a location or truck, markers in this example can be dragged"><i class="fa fa-map-o fa-fw"></i>  Map</a>
+    <a href="{% url 'visual1' user_name=Name %}" class="w3-bar-item w3-button w3-padding" data-toggle="tooltip" title="An example that illustrates the capability of webapps to show 3D visualisations by means of a very simple non-interactive scene"><i class="fa fa-cubes fa-fw"></i>  3D Example</a>
+    <a href="{% url 'visual2' user_name=Name %}" class="w3-bar-item w3-button w3-padding" data-toggle="tooltip" title="An example to highlight the potential capabilities of using interactive graphics in webapps"><i class="fa fa-object-group fa-fw"></i>  Interactive Graphics</a>
+    <a href="{% url 'optimiser' user_name=Name %}" class="w3-bar-item w3-button w3-padding" data-toggle="tooltip" title="An example that calls a Genetic Algorithm over a randomised instance of a vehicle routing problem, output is shown in the form of a diagram"><i class="fa fa-money fa-fw"></i>  Genetic Optimiser Example</a>
+    <a href="{% url 'matching' user_name=Name %}" class="w3-bar-item w3-button w3-padding" data-toggle="tooltip" title="Mock-up of what the backhauling matching application should look like"><i class="fa fa-cogs fa-fw"></i>  Backhauling Matching App</a>
+    <a href="{% url 'about' user_name=Name %}" class="w3-bar-item w3-button w3-padding" data-toggle="tooltip" title="Some basic ideas behind the demo and the technologies used to build it"><i class="fa fa-cog fa-fw"></i>  Technologies Used</a>
+    <a href="{% url 'index' %}" class="w3-bar-item w3-button w3-padding" data-toggle="tooltip" title="Exit to the Login window"><i class="fa fa-sign-out fa-fw"></i>  Logout</a>
+  </div>
+</nav>
+
+
+<!-- Overlay effect when opening sidebar on small screens -->
+<div class="w3-overlay w3-hide-large w3-animate-opacity" onclick="w3_close()" style="cursor:pointer" title="close side menu" id="myOverlay"></div>
+
+<!-- !PAGE CONTENT! -->
+<div class="w3-main" style="margin-left:300px;margin-top:43px;">
+
+  <!-- Header -->
+  <header class="w3-container" style="padding-top:22px">
+    <h5><b><i class="fa fa-dashboard"></i> </b></h5> <!-- <p id="DashTitle">My Dashboard</p> -->
+  </header>
+
+  <script>
+    var tWaiting = Math.floor(Math.random() * 8);
+    var tUse = Math.floor(Math.random() * 20);
+    var tMaintenance = Math.floor(Math.random() * 6);
+  </script>
+
+  <div class="w3-row-padding w3-margin-bottom">
+    <div class="w3-quarter">
+      <div class="w3-container w3-red w3-padding-16">
+        <div class="w3-left"><i class="fa fa-truck w3-xxxlarge"></i></div>
+        <div class="w3-right">
+          <h3><p id="first"></p> <script>document.getElementById('first').innerHTML = tWaiting; </script></h3>
+        </div>
+        <div class="w3-clear"></div>
+        <h4>Trucks Waiting</h4>
+      </div>
+    </div>
+    <div class="w3-quarter">
+      <div class="w3-container w3-green w3-padding-16">
+        <div class="w3-left"><i class="fa fa-truck w3-xxxlarge"></i></div>
+        <div class="w3-right">
+          <h3><p id="second"></p> <script>document.getElementById('second').innerHTML = tUse; </script></h3>
+        </div>
+        <div class="w3-clear"></div>
+        <h4>Trucks in Use</h4>
+      </div>
+    </div>
+    <div class="w3-quarter">
+      <div class="w3-container w3-yellow w3-padding-16">
+        <div class="w3-left"><i class="fa fa-truck w3-xxxlarge"></i></div>
+        <div class="w3-right">
+          <h3><p id="third"></p> <script>document.getElementById('third').innerHTML = tMaintenance; </script></h3>
+        </div>
+        <div class="w3-clear"></div>
+        <h4>Trucks in Maintenance</h4>
+      </div>
+    </div>
+    <div class="w3-quarter">
+      <div class="w3-container w3-blue w3-text-white w3-padding-16">
+        <div class="w3-left"><i class="fa fa-users w3-xxxlarge"></i></div>
+        <div class="w3-right">
+          <h3><p id="fourth"></p> <script>document.getElementById('fourth').innerHTML = 100*parseFloat(0.8+ 0.2*Math.random()).toFixed(3)+'%'; </script></h3>
+        </div>
+        <div class="w3-clear"></div>
+        <h4>Driver Utilization</h4>
+      </div>
+    </div>
+  </div>
+
+  <div class="w3-panel" id="modcontent">
+    <!-- <script>$('#modcontent').load( '{% static "html/Entry.html" %}');</script> -->
+    {% block content %}
+
+    {% endblock %}
+  </div>
+
+
+  <!-- Footer -->
+  <footer class="w3-container w3-padding-16 w3-indigo" id="pies">
+    <p align="right">Created by Jose Saavedra-Rosas - 2017</p>
+
+  </footer>
+
+  <!-- End page content -->
+</div>
+
+<script>
+// Get the Sidebar
+var mySidebar = document.getElementById("mySidebar");
+
+// Get the DIV with overlay effect
+var overlayBg = document.getElementById("myOverlay");
+
+// Toggle between showing and hiding the sidebar, and add overlay effect
+function w3_open() {
+    if (mySidebar.style.display === 'block') {
+        mySidebar.style.display = 'none';
+        overlayBg.style.display = "none";
+    } else {
+        mySidebar.style.display = 'block';
+        overlayBg.style.display = "block";
+    }
+}
+
+// Close the sidebar with the close button
+function w3_close() {
+    mySidebar.style.display = "none";
+    overlayBg.style.display = "none";
+}
+</script>
+
+</body>
+</html>

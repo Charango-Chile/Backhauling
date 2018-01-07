@@ -1,0 +1,16 @@
+{% extends 'OptDemo/Dashboard_Admin.html' %}
+
+{% block content %}
+
+{% load staticfiles %}
+
+  <form method="get">
+    {{ filter.form.as_p }}
+    <button type="submit">Search</button>
+  </form>
+  <ul>
+  {% for truck in filter.qs %}
+    <li>{{ truck.TruckName }} - {{ truck.OwnerName }}</li>
+  {% endfor %}
+  </ul>
+{% endblock %}

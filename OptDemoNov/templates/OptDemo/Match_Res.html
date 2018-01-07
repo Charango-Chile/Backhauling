@@ -1,0 +1,28 @@
+{% extends 'OptDemo/Dashboard_Admin1.html' %}
+
+{% block content %}
+
+{% load staticfiles %}
+
+<!--TODO: ON THIS ONE WE SHOULD GRAPHICALLY PRESENT THE SOLUTIONS!!! AND ALLOW FILETRING FOR INSTANCE!!!-->
+
+        <div class="w3-container">
+
+
+        </div>
+    <h1>Output from the Optimisation Solver</h1><br>
+ <div id="fileDisplayArea" style="white-space: pre-wrap;"> </div>
+    <script>
+
+fetch('{% static "data/results_opt.txt" %}')
+  .then(res => res.text())
+  .then(content => {
+    let lines = content.split(/\n/);
+    lines.forEach(line => document.getElementById("fileDisplayArea").innerHTML += line);
+  });
+
+</script>
+
+</div>
+
+{% endblock %}

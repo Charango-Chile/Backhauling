@@ -1,0 +1,316 @@
+{% extends 'BHDemo/Dashboard.html' %}
+
+{% block content %}
+
+<div class="w3-row-padding" style="margin:0 -16px; background-color: #ffffff">
+  <style>
+    svg {
+      margin: 2em 0;
+      font: 10px sans-serif;
+    }
+
+    .foreground {
+      fill: #2D6A99;
+    }
+
+    .background {
+      fill: #eee;
+    }
+
+
+path {
+  stroke: steelblue;
+	stroke-width: 2;
+	fill: none;
+}
+
+.axis path,
+.axis line {
+	fill: none;
+	stroke: grey;
+	stroke-width: 1;
+	shape-rendering: crispEdges;
+}
+
+
+.axis--x path {
+  display: none;
+}
+
+.line {
+  fill: none;
+  stroke: steelblue;
+  stroke-width: 1.5px;
+}
+
+.arc text {
+  font: 10px sans-serif;
+  text-anchor: middle;
+}
+
+.arc path {
+  stroke: #fff;
+}
+
+
+  </style>
+
+    <div id="gr1" class="w3-quarter">
+      <h3>Live Bar Chart</h3>
+      <div class="bar-chart"></div>
+    </div>
+
+    <div id="gr2" class="w3-quarter">
+      <h3>Pie Chart</h3>
+    </div>
+
+      <div id="gr3" class="w3-half">
+      <h3>Multiple Lines</h3>
+    </div>
+
+<script>
+
+// document.getElementById('DashTitle').innerHTML = 'Dashboard - Example of Graph Collections';
+
+var n = 10, // how many bars?
+    random = function() { return Math.floor(Math.random() * 100); }, // randomize some numbers for data
+    data = d3.range(n).map(random); // an array of randomized datapoints
+
+var barChart = {
+  init: function() {
+    this.height = 200;
+    this.width = $("#gr1").width()-5;
+    this.padding = 12;
+    this.el = ".bar-chart"; // where we'll put our svg
+
+    // calculate the bar width from the total chart width
+    barWidth = Math.floor((this.width - (this.padding * (data.length - 1))) / data.length);
+    barHeight = this.height - 20;
+
+
+    this.svg = d3.select(this.el).insert('svg', ':first-child')
+      .attr('width', this.width)
+      .attr("height", this.height);
+
+    this.draw();
+  },
+    draw: function() {
+    this.meters = this.svg
+      .append("g")
+        .attr("class", "meter")
+        .selectAll("rect")
+          .data(data)
+          .enter()
+          .append('g')
+            .attr("class", "bar");
+
+    this.drawBar().attr("class", "background").attr("y", 0).attr("height", barHeight);
+    this.drawBar().attr("class", "foreground").attr("y", barHeight).attr("height", 0);
+  },
+    // this actually draws a bar
+  drawBar: function () {
+    var self = this;
+
+    return this.meters.append("rect")
+      .attr("x", function (d, i) {
+        return i * (barWidth + self.padding);
+      })
+      .attr("width", barWidth);
+  },
+ update: function () {
+      var self = this;
+      // select the foreground bars and call the animate method on them
+      d3.selectAll("rect.foreground").each(self.animate);
+  },
+
+  animate: function (d, i) {
+    var total = data[i];
+    var bar = d3.select(this);
+    if (barHeight - total != bar.attr("y")) {
+      bar.transition().duration(1000).attr("height", total).attr("y", barHeight - total);
+    }
+  }
+}
+
+barChart.init();
+
+// In this example, every couple seconds update the bar chart with new numbers!
+setInterval(function() {
+  data = d3.range(n).map(random); // get new random numbers
+  barChart.update();
+}, 500);
+</script>
+
+
+
+<script>
+
+var N = 4;
+data = Array.from({length: N}, () => Math.floor(10 + Math.random() * 91));
+
+var width = $("#gr2").width()-5,
+    height = 200,
+    radius = Math.min(width, height) / 2;
+
+var color = d3.scaleOrdinal()
+    .range(["#98abc5", "#8a89a6", "#8aaaff", "#7b6888"]);
+
+var arc = d3.arc()
+    .outerRadius(radius - 10)
+    .innerRadius(0);
+
+var labelArc = d3.arc()
+    .outerRadius(radius - 40)
+    .innerRadius(radius - 40);
+
+var pie = d3.pie()
+    .sort(null)
+    .value(function(d) { return d; });
+
+var svg = d3.select("#gr2").append("svg")
+    .attr("width", width)
+    .attr("height", height)
+  .append("g")
+    .attr("transform", "translate(" + width / 2 + "," + height / 2 + ")");
+
+  var g = svg.selectAll(".arc")
+      .data(pie(data))
+    .enter().append("g")
+      .attr("class", "arc");
+
+  g.append("path")
+      .attr("d", arc)
+      .style("fill", function(d) { return color(d.data); });
+
+  g.append("text")
+      .attr("transform", function(d) { return "translate(" + labelArc.centroid(d) + ")"; })
+      .attr("dy", ".35em")
+      .text(function(d) { return d.data; });
+</script>
+
+
+ <script>
+
+// set the dimensions and margins of the graph
+var margin = {top: 20, right: 20, bottom: 30, left: 50},
+    width = $("#gr3").width()-200,
+    height = 200;
+
+// parse the date / time
+var parseTime = d3.timeParse("%Y");
+
+// set the ranges
+var x = d3.scaleTime().range([0, width]);
+var y = d3.scaleLinear().range([height, 0]);
+
+// define the line
+var valueline = d3.line()
+    .x(function(d) { return x(d.Date); })
+    .y(function(d) { return y(d.Imports); });
+// define the line
+var valueline2 = d3.line()
+    .x(function(d) { return x(d.Date); })
+    .y(function(d) { return y(d.Exports); });
+
+// append the svg obgect to the body of the page
+// appends a 'group' element to 'svg'
+// moves the 'group' element to the top left margin
+var svg = d3.select("#gr3").append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+  .append("g")
+    .attr("transform",
+          "translate(" + margin.left + "," + margin.top + ")");
+
+function draw(data, country) {
+
+  var data = data[country];
+
+  // format the data
+  data.forEach(function(d) {
+      d.Date = parseTime(d.Date);
+      d.Imports = +d.Imports;
+      d.Exports = +d.Exports;
+  });
+
+  // sort years ascending
+  data.sort(function(a, b){
+    return a["Date"]-b["Date"];
+	})
+
+  // Scale the range of the data
+  x.domain(d3.extent(data, function(d) { return d.Date; }));
+  y.domain([0, d3.max(data, function(d) {
+	  return Math.max(d.Imports, d.Exports); })]);
+
+  // Add the valueline path.
+  svg.append("path")
+      .data([data])
+      .attr("class", "line")
+      .attr("d", valueline);
+  // Add the valueline path.
+  svg.append("path")
+      .data([data])
+      .attr("class", "line")
+      .attr("d", valueline2);
+  // Add the X Axis
+  svg.append("g")
+      .attr("transform", "translate(0," + height + ")")
+      .call(d3.axisBottom(x));
+
+  // Add the Y Axis
+  svg.append("g")
+      .call(d3.axisLeft(y));
+  }
+// Get the data
+d3.json("../../static/data/data.json", function(error, data) {
+  if (error) throw error;
+
+  // trigger render
+  draw(data, "Afghanistan");
+});
+
+</script>
+
+
+</div>
+
+<!--
+
+// Adds the svg canvas
+var	chart2 = d3.select("#gr3")
+	.append("svg")
+		.attr("width", $("#gr3").width()-5)
+		.attr("height", 120)
+	.append("g")
+		.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+
+// Get the data
+d3.csv("../../static/data/data2.csv", function(error, data) {
+	data.forEach(function(d) {
+		d.date = parseDate(d.date);
+		d.close = +d.close;
+	});
+
+	// Scale the range of the data
+	x.domain(d3.extent(data, function(d) { return d.date; }));
+	y.domain([0, d3.max(data, function(d) { return d.close; })]);
+
+	// Add the valueline path.
+	chart2.append("path")
+		.attr("class", "line")
+		.attr("d", valueline(data));
+
+	// Add the X Axis
+	chart2.append("g")
+		.attr("class", "x axis")
+		.attr("transform", "translate(0," + height + ")")
+		.call(xAxis);
+
+	// Add the Y Axis
+	chart2.append("g")
+		.attr("class", "y axis")
+		.call(yAxis);-->
+
+{% endblock %}

@@ -1,0 +1,317 @@
+{% extends 'OptDemo/Dashboard_Admin.html' %}
+
+{% block content %}
+
+{% load staticfiles %}
+
+<style>
+.modal-body .form-horizontal .col-sm-2,
+.modal-body .form-horizontal .col-sm-10 {
+    width: 100%
+}
+
+.modal-body .form-horizontal .control-label {
+    text-align: left;
+}
+.modal-body .form-horizontal .col-sm-offset-2 {
+    margin-left: 15px;
+}
+</style>
+
+<!-- Modal -->
+
+<script>
+function createFunction(element) {
+   var Capacity = $(element).parent().prev().find("#TruckCapacity").val();
+   var Image = 'http://maps.google.com/mapfiles/ms/icons/green.png';
+   var MarkerType = String(gmarkers[vmarker].Type);
+   if (MarkerType == "Parcel") {
+      Image = 'http://maps.google.com/mapfiles/ms/icons/purple.png';
+   }
+   gmarkers[vmarker].capacity = Capacity;
+   $("#myModalNorm").modal("hide");
+   gmarkers[vmarker].setIcon (Image);
+}
+
+// THIS IS HAVERSINE DISTANCE CALCULATION
+    function getDistanceFromLatLonInKm(lat1,lon1,lat2,lon2) {
+      var R = 6371; // Radius of the earth in km
+      var dLat = deg2rad(lat2-lat1);  // deg2rad below
+      var dLon = deg2rad(lon2-lon1);
+      var a =
+        Math.sin(dLat/2) * Math.sin(dLat/2) +
+        Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *
+        Math.sin(dLon/2) * Math.sin(dLon/2)
+        ;
+      var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+      var d = R * c; // Distance in km
+      return d;
+    }
+
+    function deg2rad(deg) {
+      return deg * (Math.PI/180)
+    }
+</script>
+<div class="modal fade" id="myModalNorm" tabindex="-1" role="dialog"
+     aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <button type="button" class="close"
+                   data-dismiss="modal">
+                       <span aria-hidden="true">&times;</span>
+                       <span class="sr-only">Close</span>
+                </button>
+                <h4 class="modal-title" id="myModalLabel">
+                    Information Required
+                </h4>
+            </div>
+
+            <!-- Modal Body -->
+            <div class="modal-body">
+                <input type="hidden" name="indexmarker" id="indexmarker" value="" />
+
+                  <div class="form-group">
+                    <label for="TruckCapacity">Enter Capacity</label>
+                      <input class="form-control"
+                      id="TruckCapacity" placeholder="Enter Capacity"/>
+                  </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" onclick="createFunction(this)" class="btn btn-success">Create</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- !PAGE CONTENT! -->
+<div class="w3-main" style="margin-left:300px;margin-top:43px;">
+
+
+
+    <header class="w3-container" style="padding-top:22px">
+        <div class="w3-container">
+
+            <div id="MarkerType">
+                <h3>
+                 <input type="radio" id="m1" name="MarkerT" value="Trucks" checked="checked" > Trucks
+                 <input type="radio" id="m2" name="MarkerT" value="Parcels"> Parcels
+                </h3>
+            </div>
+
+        </div>
+    </header>
+
+  <div class="w3-panel" id="modcontent">
+
+    <div class="w3-row-padding" style="margin:0 0px">
+      <div class="w3-twothird" id="divider">
+        <center> <div id="map1" style="width:740px;height:370px;background:white"></div> </center>
+
+        <script>
+        var sWidth = $("#divider").width()*0.95;
+        var sHeight = (window.innerHeight-$("#Superior").height())*0.80;
+        $("#map1").css("width", sWidth);
+        $("#map1").css("height", sHeight);
+        var mapopt;
+        var marker;
+        var gmarkers = Array();
+        var mindex = 0;
+        var pindex = 0;
+        var glomarker = 0;
+        var vmarker;
+        var inconurl;
+        var texto;
+        var ListofTrucks;
+
+          function placeMarker(position, map) {
+          var MarkerType = $("input[name=MarkerT]:checked").val();
+          if (MarkerType == "Trucks") {
+              iconurl = 'http://maps.google.com/mapfiles/ms/icons/red.png';
+              texto = "Truck " + String(mindex);
+          } else {
+              iconurl = 'http://maps.google.com/mapfiles/ms/icons/blue.png';
+              texto = "Parcel " + String(pindex);
+          }
+            marker = new google.maps.Marker({
+              position: position,
+              map: map,
+
+            label: {
+                text: texto,
+                color: "#000",
+                fontSize: "18px",
+                fontWeight: "bold"
+            },
+            labelOrigin: new google.maps.Point(9, 9),
+            icon: {
+                url: iconurl,
+                origin: {x: 0, y: 0},
+                labelOrigin: new google.maps.Point(20,40)
+            },
+            title: 'Latitude:' + String(position.lat()) + ', Longitude:' + String(position.lng())
+            });
+            if (MarkerType == "Trucks") {
+                marker.Type = "Truck";
+                marker.index = mindex;
+                marker.glmarker = glomarker;
+                marker.capacity = 10.0;
+                mindex +=1;
+                glomarker += 1;
+            } else {
+                marker.Type = "Parcel";
+                marker.index = pindex;
+                marker.glmarker = glomarker;
+                marker.capacity = 2.0;
+                pindex +=1;
+                glomarker += 1;
+            }
+            gmarkers.push(marker);
+
+            google.maps.event.addListener(marker, 'click', function() {
+                vmarker = this.glmarker;
+                $("#myModalNorm #TruckCapacity").val("");
+                $("#myModalNorm").modal("show");
+            });
+          }
+
+        function myMap() {
+
+          var mapOptions = {
+              center: new google.maps.LatLng(13.7, 100.5),
+              zoom: 6,
+              mapTypeId: google.maps.MapTypeId.MAP
+            };
+          mapopt = new google.maps.Map(document.getElementById("map1"), mapOptions);
+
+          google.maps.event.addListener(mapopt, 'click', function(e) {
+              placeMarker(e.latLng, mapopt);
+          });
+        }
+        </script>
+
+
+        <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDxVzTLMo2bD0gjgPhBPSLXMjpEg8tb3zo&callback=myMap"></script>
+
+
+      </div>
+
+        <div class="w3-third" id="derecha">
+        <script type="text/javascript">
+
+        function Create2DArray(rows) {
+          var arr = [];
+          for (var i=0;i<rows;i++) {
+             arr[i] = [];
+          }
+          return arr;
+        }
+
+        function loading(){
+                var distances = Create2DArray(gmarkers.length+1);
+                var listoftrucks = Create2DArray(gmarkers.length);
+                for(i = 0 ; i< gmarkers.length; i++){
+                   var marker1 = gmarkers[i];
+                   listoftrucks[i][0] = marker1.position.lat();
+                   listoftrucks[i][1] = marker1.position.lng();
+                   listoftrucks[i][2] = marker1.Type;
+                   listoftrucks[i][3] = marker1.index;
+                   listoftrucks[i][4] = marker1.capacity;
+                   listoftrucks[i][5] = marker1.glmarker;
+                   lat1 = marker1.position.lat();
+                   lng1 = marker1.position.lng();
+                   for(j = 0 ; j< gmarkers.length; j++){
+                     var marker2 = gmarkers[j];
+                     lat2 = marker2.position.lat();
+                     lng2 = marker2.position.lng();
+                     distances[i][j] = getDistanceFromLatLonInKm(lat1,lng1,lat2,lng2);
+                   }
+                   <!--Lat: 13.7140519, Lon: 100.7518861 are the coordinates for the Free Zone-->
+                   distances[i][gmarkers.length] = getDistanceFromLatLonInKm(lat1,lng1,13.7140519,100.7518861);
+                   distances[gmarkers.length][i] = getDistanceFromLatLonInKm(lat1,lng1,13.7140519,100.7518861);
+                }
+                distances[gmarkers.length][gmarkers.length] = getDistanceFromLatLonInKm(13.7140519,100.7518861,13.7140519,100.7518861);
+
+                exportToCsv('Distances.csv', distances);
+                exportToCsv('TruckList.csv', listoftrucks);
+
+                $("#loading").show();
+                $("body").css("cursor", "progress");
+            }
+
+            function exportToCsv(filename, rows) {
+                    var processRow = function (row) {
+                        var finalVal = '';
+                        for (var j = 0; j < row.length; j++) {
+                            var innerValue = row[j] === null ? '' : row[j].toString();
+                            if (row[j] instanceof Date) {
+                                innerValue = row[j].toLocaleString();
+                            };
+                            var result = innerValue.replace(/"/g, '""');
+                            if (result.search(/("|,|\n)/g) >= 0)
+                                result = '"' + result + '"';
+                            if (j > 0)
+                                finalVal += ',';
+                            finalVal += result;
+                        }
+                        return finalVal + '\n';
+                    };
+
+                    var csvFile = '';
+                    for (var i = 0; i < rows.length; i++) {
+                        csvFile += processRow(rows[i]);
+                    }
+
+                    var blob = new Blob([csvFile], { type: 'text/csv;charset=utf-8;' });
+                    if (navigator.msSaveBlob) { // IE 10+
+                        navigator.msSaveBlob(blob, filename);
+                    } else {
+                        var link = document.createElement("a");
+                        if (link.download !== undefined) { // feature detection
+                            // Browsers that support HTML5 download attribute
+                            var url = URL.createObjectURL(blob);
+                            link.setAttribute("href", url);
+                            link.setAttribute("download", filename);
+                            link.style.visibility = 'hidden';
+                            document.body.appendChild(link);
+                            link.click();
+                            document.body.removeChild(link);
+                        }
+                    }
+                }
+
+        </script>
+
+            <style>
+            div#loading {
+                width: 800px;
+                height: 50px;
+                display: none;
+                }
+            </style>
+
+<center><div id="loading"> <h3>The request is being processed!
+    <br> Please be patient... </h3> </div></center>
+            <br>
+            <br>
+<center>
+<form action="{% url 'optmatchres' user_name=Name %}" method="post">
+    {% csrf_token %}
+    <button class="btn btn-lg btn-primary" type="submit" value="runoptex" onclick="loading()">Run Optimisation</button><br><br><br>
+    <!--<button class="btn btn-lg btn-primary" type="button" value="runoptex" onclick="loading()">List of Markers</button>-->
+</form>
+</center>
+        </div>
+        <h2>Legend for Map markers:</h2> <br>
+        <ul>
+            <li><img src='http://maps.google.com/mapfiles/ms/icons/red.png'>: Trucks not yet assigned properties </li><br>
+            <li><img src='http://maps.google.com/mapfiles/ms/icons/green.png'>: Trucks with properties assigned</li><br>
+            <li><img src='http://maps.google.com/mapfiles/ms/icons/blue.png'>: Parcels not yet assigned properties </li><br>
+            <li><img src='http://maps.google.com/mapfiles/ms/icons/purple.png'>: Parcels with properties assigned </li><br>
+        </ul>
+    </div>
+
+  </div>
+{% endblock %}

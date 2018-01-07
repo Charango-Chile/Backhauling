@@ -1,0 +1,98 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Register</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+{% load staticfiles %}
+
+<script src='{% static "javascript/lib/jquery-3.2.1.min.js" %}'></script>
+<link rel="stylesheet" href='{% static "javascript/bootstrap-3.3.7-dist/css/bootstrap.css" %}'>
+<script src='{% static "javascript/bootstrap-3.3.7-dist/js/bootstrap.min.js" %}'></script>
+
+<link href='{% static "css/signin.css" %}' rel="stylesheet">
+
+
+      <style>
+    /* Set height of the grid so .sidenav can be 100% (adjust if needed) */
+    .row.content {height: 90vh}
+
+    /* Set gray background color and 100% height */
+    .sidenav {
+      background-color: #f1f1f1;
+      height: 100%;
+    }
+
+    /* Set black background color, white text and some padding */
+    footer {
+      background-color: #555;
+      color: white;
+      padding: 15px;
+    }
+
+    /* On small screens, set height to 'auto' for sidenav and grid */
+    @media screen and (max-width: 767px) {
+      .sidenav {
+        height: auto;
+        padding: 15px;
+      }
+      .row.content {height: auto;}
+    }
+  </style>
+
+</head>
+
+
+<body>
+
+<div class="container-fluid">
+  <div class="row content">
+    <div class="col-sm-12">
+        <div class="jumbotron" style="background-color:#c13124">
+            <center><h2><font color="#ffffff">Register as Carrier</font></h2></center>
+        </div>
+        <div class="row-sm-3">
+            <form class="form-signin" action="{% url 'optregister_conf' %}" method="POST">
+                {% csrf_token %}
+                <h5 class="form-signin-heading">Please try again, the passwords provided didn't match.</h5>
+                <input name="Name" type="text" id="inputName" class="form-control" placeholder="Name" required autofocus>
+                <br>
+                <input name="Email" type="email" id="inputEmail" class="form-control" placeholder="Email address" required autofocus>
+                <br>
+                <div class="row-sm-3">
+                    <input name="Password" type="password" id="inputPassword" class="form-control" placeholder="Password" required>
+                    <input name="PasswordR" type="password" id="inputPasswordR" class="form-control" placeholder="Repeat Password" required>
+                </div>
+                <input name="LoginType" type="hidden" id="ShHidden" value="Shipper">
+                <button class="btn btn-lg btn-primary btn-block" type="submit" value=Register>Register</button>
+            </form>
+        </div>
+    </div>
+
+                          <div class="row">
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <center>
+                <img src="{% static 'images/logo_zz.png' %}" height="150">
+                <img src="{% static 'images/logo thai log fed.png' %}" height="150">
+                <img src="{% static 'images/logo_NRCT.jpg' %}" height="150">
+                <img src="{% static 'images/TRF logo.png' %}" height="150">
+                <img src="{% static 'images/logo_xx.png' %}" height="150">
+            </center>
+        </div>
+  </div>
+</div>
+
+<footer class="container-fluid" style="background-color:#252e3d">
+  <p>Created by Janya Chanchaichujit's Research Group - 2017</p>
+</footer>
+
+</body>
+</html>

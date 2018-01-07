@@ -1,0 +1,86 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Register</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+{% load staticfiles %}
+
+<script src='{% static "javascript/lib/jquery-3.2.1.min.js" %}'></script>
+<link rel="stylesheet" href='{% static "javascript/bootstrap-3.3.7-dist/css/bootstrap.css" %}'>
+<link rel="stylesheet" href='{% static "css/w3.css" %}'>
+<script src='{% static "javascript/bootstrap-3.3.7-dist/js/bootstrap.min.js" %}'></script>
+
+<link href='{% static "css/signin.css" %}' rel="stylesheet">
+
+
+      <style>
+    /* Set height of the grid so .sidenav can be 100% (adjust if needed) */
+    .row.content {height: 90vh}
+
+    /* Set gray background color and 100% height */
+    .sidenav {
+      background-color: #f1f1f1;
+      height: 100%;
+    }
+
+    /* Set black background color, white text and some padding */
+    footer {
+      background-color: #555;
+      color: white;
+      padding: 15px;
+    }
+
+    /* On small screens, set height to 'auto' for sidenav and grid */
+    @media screen and (max-width: 767px) {
+      .sidenav {
+        height: auto;
+        padding: 15px;
+      }
+      .row.content {height: auto;}
+    }
+  </style>
+
+</head>
+
+
+<body>
+
+<div class="container-fluid">
+  <div class="row content">
+    <div class="col-sm-12">
+        <div class="jumbotron" style="background-color:#197a46">
+            <center><h2><font color="#ffffff">You have been succesfully registered! </font></h2></center>
+        </div>
+        <center>
+            <a class="w3-btn w3-ripple w3-teal" href="{% url 'optindex' %}">Go Back Home!</a>
+        </center>
+    </div>
+        </div>
+                        <div class="row">
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <br>
+            <center>
+                <img src="{% static 'images/logo_zz.png' %}" height="150">
+                <img src="{% static 'images/logo thai log fed.png' %}" height="150">
+                <img src="{% static 'images/logo_NRCT.jpg' %}" height="150">
+                <img src="{% static 'images/TRF logo.png' %}" height="150">
+                <img src="{% static 'images/logo_xx.png' %}" height="150">
+            </center>
+        </div>
+  </div>
+</div>
+
+<footer class="container-fluid" style="background-color:#252e3d">
+  <p>Created by Janya Chanchaichujit's Research Group - 2017</p>
+</footer>
+
+</body>
+</html>
