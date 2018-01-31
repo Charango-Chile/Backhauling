@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Leaflet Map Tests :)</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    {% load staticfiles %}
+
+    <script src='{% static "javascript/lib/jquery-3.2.1.min.js" %}'></script>
+    <link rel="stylesheet" href='{% static "javascript/bootstrap-3.3.7-dist/css/bootstrap.css" %}'>
+    <script src='{% static "javascript/bootstrap-3.3.7-dist/js/bootstrap.min.js" %}'></script>
+    <link rel="stylesheet" href='{% static "javascript/leaflet/leaflet.css" %}'>
+    <script src='{% static "javascript/leaflet/leaflet.js" %}'></script>
+    <link rel="stylesheet" href='{% static "javascript/leaflet/Control.OSMGeocoder.css" %}'>
+    <script src='{% static "javascript/leaflet/Control.OSMGeocoder.js" %}'></script>
+    <script src='{% static "javascript/leaflet/polyline.encoded.js" %}'></script>
+    <!--<script src='{% static "javascript/leaflet/leaflet-search.src.js" %}'></script>-->
+    <link href='{% static "css/signin.css" %}' rel="stylesheet">
+
+
+    <style>
+    /* Set height of the grid so .sidenav can be 100% (adjust if needed) */
+    .row.content {height: 90vh}
+
+    /* Set gray background color and 100% height */
+    .sidenav {
+      background-color: #f1f1f1;
+      height: 100%;
+    }
+
+    /* Set black background color, white text and some padding */
+    footer {
+      background-color: #555;
+      color: white;
+      padding: 15px;
+    }
+
+    /* On small screens, set height to 'auto' for sidenav and grid */
+    @media screen and (max-width: 767px) {
+      .sidenav {
+        height: auto;
+        padding: 15px;
+      }
+      .row.content {height: auto;}
+    }
+
+
+    </style>
+
+</head>
+
+
+<body>
+
+<div class="container-fluid">
+    <div class="row content">
+
+        <div class="col-sm-12" id="jumbo">
+            <div class="jumbotron" style="background-color:#252e3d">
+                <center><h1><font color="#ffffff">Testing Forms!</font></h1></center>
+            </div>
+        </div>
+        <center>
+            <form method="post">
+                {% csrf_token %}
+                <!-- {{ form.as_p }} -->
+                {% for field in form %}
+                <div class="fieldWrapper">
+                    {{ field.label_tag }} {{ field }}
+                </div>
+                {% endfor %}
+                <input type="submit" value="Submit"/>
+
+                {{ form.CurrentLon.html_name }}  <!-- form.CurrentLon.value, This Gives the value of the CurrentLongitude-->
+            </form>
+
+            <br>
+            <br>
+
+            <div id="map" style="width:widthwin;height:heighwin"></div>
+            <script>
+              var widthwin = $(window).width()*0.7;
+              var heightwin = ($(document).height() - $(jumbo).height())*0.45;
+              document.getElementById('map').style.height = heightwin + "px";
+              document.getElementById('map').style.width = widthwin + "px";
+            </script>
+        </center>
+
+
+    </div>
+</div>
+
+<script>
+var map;
+var mymarker;
+var currentlatlng;
+
+var geometry;
+
+var firstpolyline;
+
+function onMapClick(e) {
+   if (typeof firstpolyline != "undefined") {
+       map.removeLayer(firstpolyline);
+   }
+   currentlatlng = e.latlng;
+   LngFormObject = '{{ form.CurrentLon.auto_id }}';
+   LatFormObject = '{{ form.CurrentLat.auto_id }}';
+   document.getElementById(LngFormObject).value = String(e.latlng.lng);
+   document.getElementById(LatFormObject).value = String(e.latlng.lat);
+   mymarker.setLatLng(currentlatlng);
+   $.ajax({
+     method: "POST",
+     url: "http://110.164.130.191:7001/osrm/route/v1/driving/" + String(100.74363112449647) + "," + String(13.66087464742539) + ";" + String(e.latlng.lng) + "," + String(e.latlng.lat)  + "?overview=full",
+     data: {}
+     })
+   .done(function(msg) {
+       <!-- console.log(msg["routes"][0]["distance"] + ', ' + msg["routes"][0]["duration"]); -->
+       mymarker.distance = msg["routes"][0]["distance"];
+       mymarker.duration = msg["routes"][0]["duration"];
+
+       geometry = L.PolylineUtil.decode(msg["routes"][0]["geometry"], 5);
+       firstpolyline = new L.Polyline(geometry, {
+           color: 'blue',
+           weight: 5,
+           opacity: 0.6,
+           smoothFactor: 1
+       });
+       map.addLayer(firstpolyline);
+   });
+}
+
+function mouseOnMarker(e) {
+   mymarker.bindPopup('<b>Latitude and Longitude Information</b><br> Distance: ' + (mymarker.distance/1000.0).toFixed(2) + ' (Km), Duration: ' + (mymarker.duration/60.0).toFixed(2) + " (Mins)").openPopup(); <!-- e.latlng.lat + ', ' + e.latlng.lng).openPopup(); -->
+}
+
+function mouseOutMarker(e) {
+   map.closePopup();
+}
+
+function initmap() {
+	// set up the map, this references to the "map" divider included previously
+	map = new L.Map('map');
+
+	mymarker = L.marker([0,0]).addTo(map);
+
+	mymarker.on('mouseover', mouseOnMarker);
+	mymarker.on('mouseout', mouseOutMarker);
+
+
+	// create the tile layer with correct attribution
+	var osmUrl='http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+	var osmAttrib='Map data © <a href="http://openstreetmap.org">OpenStreetMap</a> contributors';
+	var osm = new L.TileLayer(osmUrl, {minZoom: 4, maxZoom: 19, attribution: osmAttrib});
+
+	// start the map in Suvarnabhumi Airport
+	map.setView(new L.LatLng(13.69, 100.75),11);
+	map.addLayer(osm);
+
+    var options = {
+        collapsed: false,        /* Whether its collapsed or not */
+        position:  'topright',  /* The position of the control */
+        text:      'Locate',    /* The text of the submit button */
+        email:     null,        /* The email string with a contact to provide to Nominatim. Useful if you are doing lots of queries */
+        bounds:    null,        /* The L.LatLngBounds object to limit the results to */
+        callback:  function (results) { /* The callback function to handle geocoder response */
+            var bbox = results[0].boundingbox,
+                first = new L.LatLng(bbox[0], bbox[2]),
+                second = new L.LatLng(bbox[1], bbox[3]),
+                bounds = new L.LatLngBounds([first, second]);
+            this._map.fitBounds(bounds);
+        }
+    };
+
+	var osmGeocoder = new L.Control.OSMGeocoder(options);
+
+    map.addControl(osmGeocoder);
+
+    map.on('click', onMapClick);
+
+}
+
+</script>
+
+<script>
+    initmap();
+</script>
+
+<!-- This one is for using similar to curl in Javascript, will get route from airport to where the user clicks, then will paint it!-->
+<script>
+
+</script>
+
+<footer class="container-fluid" style="background-color:#252e3d">
+    <p>Created by Jose Munizaga-Rosas - 2018</p>
+</footer>
+
+</body>
+</html>
