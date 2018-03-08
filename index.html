@@ -1,0 +1,288 @@
+
+{% extends "basegenerico.html" %}
+
+{% load staticfiles %}
+
+{% block cuerpo %}
+ {% if not user.is_authenticated %}
+<style>
+    .buttons {
+    position:relative;
+}
+    .but {
+        position:absolute;
+        bottom:0;
+        right:0;
+    }
+
+</style>
+<script>
+    currentid = 1;
+
+    function Show1() {
+        document.getElementById("2").style.display = 'none';
+        document.getElementById("3").style.display = 'none';
+        document.getElementById("4").style.display = 'none';
+        document.getElementById("5").style.display = 'none';
+    }
+
+    function Next(){
+        if (currentid < 5){
+            document.getElementById(currentid).style.display = 'none';
+            currentid += 1;
+            document.getElementById(currentid).style.display = 'block';
+        }
+    }
+
+    function Prev(){
+        if (currentid > 1){
+            document.getElementById(currentid).style.display = 'none';
+            currentid -= 1;
+            document.getElementById(currentid).style.display = 'block';
+        }
+    }
+
+</script>
+<div>
+
+     <div>
+         <p align="right">
+                <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#aboutUsModal" onclick="Show1()">About us</button>
+                <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#contactUsModal">Contact us</button>
+         </p>
+  <div class="modal fade" id="aboutUsModal" role="dialog" onload="onload="Show1()"">
+    <div class="modal-dialog">
+
+      <!-- Modal content-->
+        <div class="modal-dialog modal-lg">
+            <div class="panel panel-default">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal">&times;</button>
+          <h1 class="modal-title">About Us</h1>
+        </div>
+
+
+          <div id="1" class="container-fluid" style="width:100%;">
+              <h2> Who are we?</h2>
+              <div class="row">
+                  <div class="col-sm-7">
+                      <h4>
+                      Smartbackhaul.com is a 3PL that focuses in managing shipment at Suvarnabhumi airport Free Zone. We
+                      match shipments for shippers with reliable carriers in
+                      order to achieve cost efficiencies for shippers through backhaul pricing and reduce carrier’s
+                      costs by filling otherwise empty backhaul trips.</h4> <br>
+
+                      <h4>Our mission is to act as your logistics partner to strengthen your customer satisfaction.</h4>
+
+                  </div>
+                  <div class="col-sm-5">
+                      <img src="{% static 'images/Page3-3.png' %}" height="250" align="middle">
+                      <center>
+                          <h6>Source: https://www.thelogisticsoflogistics.com/</h6>
+                      </center>
+
+                  </div>
+              </div>
+          </div>
+
+          <div id="2" class="container-fluid" style="width:100%;">
+              <h2> If you are a Shipper...</h2>
+              <div class="row">
+                  <div class="col-sm-3">
+                      <img src="{% static 'images/Page4-3.png' %}" width="150" align="middle">
+                  </div>
+                  <div class="col-sm-3">
+                      <img src="{% static 'images/Page4-4.png' %}" width="150" align="middle">
+                  </div>
+                  <div class="col-sm-3">
+                      <img src="{% static 'images/Page4-5.png' %}" width="150" align="middle">
+                  </div>
+                  <div class="col-sm-3">
+                      <img src="{% static 'images/Page4-6.png' %}" width="150" align="middle">
+                  </div>
+              </div>
+              <div class="row">
+                  <div class="col-sm-3">
+                      <h3> Request </h3>
+                      <h4>Send your shipment requirement ( Product, Delivery date and time) to our system.</h4>
+                  </div>
+                  <div class="col-sm-3">
+                      <h3> Match </h3>
+                      <h4>We will match your shipment with our reliable carriers at an earliest possible departure from airport Free Zone.</h4>
+                  </div>
+                  <div class="col-sm-3">
+                      <h3> Deliver </h3>
+                      <h4>We manage to move your shipment with carrier to ensure your product deliver to customer safety and on time.</h4>
+                  </div>
+                  <div class="col-sm-3">
+                      <h3> Save </h3>
+                      <h4>We offer a competitive price, averaging 30% lower than market price for the same route.  We aim to lowering your transportation cost and time spent managing transportation.</h4>
+                  </div>
+
+              </div>
+          </div>
+
+          <div id="3" class="container-fluid" style="width:100%;">
+              <h2> If you are a Carrier...</h2>
+              <div class="row">
+                  <div class="col-sm-4">
+                      <img src="{% static 'images/Page5-3.png' %}" width="150" align="middle">
+                  </div>
+                  <div class="col-sm-4">
+                      <img src="{% static 'images/Page5-4.png' %}" width="150" align="middle">
+                  </div>
+                  <div class="col-sm-4">
+                      <img src="{% static 'images/Page5-5.png' %}" width="150" align="middle">
+                  </div>
+              </div>
+              <div class="row">
+                  <div class="col-sm-4">
+                      <h3> Notify </h3>
+                      <h4>Upload your backhaul truck and route to our system. We will utilize your backhaul trip.</h4>
+                  </div>
+                  <div class="col-sm-4">
+                      <h3> Match </h3>
+                      <h4>We will match your backhaul truck and route with our shippers requirement.</h4>
+                  </div>
+                  <div class="col-sm-4">
+                      <h3> Sucess </h3>
+                      <h4>Instead of return empty, your backhaul trip is full load, off setting your operation costs.</h4>
+                  </div>
+
+
+              </div>
+          </div>
+
+          <div id="4" class="container-fluid" style="width:100%;">
+              <h2> How we Work? (Process Flow)</h2>
+              <div class="row">
+                  <div class="col-sm-12">
+                      <img src="{% static 'images/HowDoWeWork.png' %}" style="height: 100%; width: 100%; object-fit: contain" align="middle">
+                  </div>
+              </div>
+              <br>
+          </div>
+
+          <div id="5" class="container-fluid" style="width:100%;">
+              <h2> Technologies Used</h2>
+              <div class="row">
+                  <div class="col-sm-12">
+
+                      <img src="{% static 'images/Dependencies.png' %}" style="height: 100%; width: 100%; object-fit: contain" align="middle">
+                  </div>
+              </div>
+              <br>
+          </div>
+
+        </div>
+        <div class="modal-footer">
+
+
+
+            <div class="but"><button type="button" class="btn btn-primary" onclick=Prev()><- Prev</button>
+    	<button type="button" class="btn btn-primary" onclick=Next()>Next -></button></div>
+        </div>
+      </div>
+
+    </div>
+        </div>
+
+    </div>
+  </div>
+
+   <!-- Modal Contact US-->
+<div class="modal fade" id="contactUsModal" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-dialog modal-lg">
+            <div class="panel panel-default">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h1 class="modal-title">About Us</h1>
+                    </div>
+
+                    <div id="contact" class="container-fluid" style="width:100%;">
+                        <h2> Contact Us</h2>
+                        <div class="row">
+                            <div class="col-sm-8">
+                                <h4> Mr. Akarat Nakasem </h4><br>
+                                <h4> Vice President </h4><br>
+                                <h4> 99/126 Moo16 Bangkaew, Bangplee, Samutprakarn 10540 </h4><br>
+                                <h4> Tel : (668) 1937-1251 </h4><br>
+                                <h4> E-mail : akgarat@spedition.co.th </h4>
+                            </div>
+                            <div class="col-sm-4">
+                                <img src="{% static 'images/Page8-3.png' %}" height="150" align="middle">
+                                <center>
+                                    <h6>Source: https://saultonline.com/</h6>
+                                </center>
+
+                            </div>
+
+                        </div>
+                        <div class="row">
+                            <center>
+                                <h4>To register download registration form </h4>
+                                <a href="{% static 'Registration Form.docx' %}" class="btn btn-info" role="button">Download
+                                    Form</a>
+                            </center>
+                            <br>
+                            <br>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+    <br>
+  <div style="background-color: #12479b">
+                <br>
+                <br>
+                <br>
+                <center>
+                    <a href = "{% url 'login'%}" class="btn btn-primary btn-lg">Admin</a>
+                    <a href = "{% url 'login'%}" class="btn btn-primary btn-lg">Carrier</a>
+                    <a href = "{% url 'login'%}" class="btn btn-primary btn-lg">Shipper</a>
+                </center>
+                <br>
+                <br>
+                <br>
+
+</div>
+
+<br>
+<br>
+                 <center>
+                 <table>
+                     <tr>
+                         <td><h3> With the Support of: &nbsp; &nbsp;</h3>  </td>
+                         <td><img src="{% static 'images/TRF.png' %}" height="100" align="middle">
+          <img src="{% static 'images/logo_zz.png' %}" height="100" align="middle">
+          <img src="{% static 'images/Page1-4.png' %}" height="100" align="middle">
+          <img src="{% static 'images/Page1-5.png' %}" height="100" align="middle"></td>
+                     </tr>
+                 </table>
+                 </center>
+
+{% endif %}
+{% if  user.is_authenticated %}
+  <div style="background-color: lightblue">
+
+                <center>
+                    <a href = "{% url 'login'%}" class="btn btn-primary btn-lg">Enter</a>
+
+                </center>
+
+</div>
+
+ <!-- Modal ABout US-->
+
+
+
+{% endif %}
+{% endblock %}
